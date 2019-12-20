@@ -75,5 +75,21 @@ class SegmentCest
         $I->seeResponseCodeIsSuccessful();
         $response = $I->grabDecodedResponse();
         $I->assertSame(SegmentService::UP_POSITION, $response['data']['position']);
+
+        $I->sendGET("/segments/{$segment->uid}/point_position", [
+            'x1' => 3,
+            'y1' => 2
+        ]);
+        $I->seeResponseCodeIsSuccessful();
+        $response = $I->grabDecodedResponse();
+        $I->assertSame(SegmentService::DOWN_POSITION, $response['data']['position']);
+
+        $I->sendGET("/segments/{$segment->uid}/point_position", [
+            'x1' => 3,
+            'y1' => 3
+        ]);
+        $I->seeResponseCodeIsSuccessful();
+        $response = $I->grabDecodedResponse();
+        $I->assertSame(SegmentService::CUT_POSITION, $response['data']['position']);
     }
 }
