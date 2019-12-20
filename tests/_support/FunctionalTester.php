@@ -1,5 +1,9 @@
 <?php
+
 namespace App\Tests;
+
+use App\Domain\Segment\Point;
+use App\Domain\Segment\Segment;
 
 /**
  * Inherited Methods
@@ -15,12 +19,40 @@ namespace App\Tests;
  * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = NULL)
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here
+     */
+
+
+    /**
+     * @return array
+     */
+    public function grabDecodedResponse()
+    {
+        return json_decode($this->grabResponse(), true);
+    }
+
+    public function haveSegment(Point $leftSide, Point $rightSide): Segment
+    {
+        $this->sendPOST('/segments/create', [
+            'x1' => $leftSide->x,
+            'y1' => $leftSide->y,
+            'x2' => $rightSide->x,
+            'y2' => $rightSide->y
+        ]);
+
+        $this->seeResponseCodeIsSuccessful();
+        $response = $this->grabDecodedResponse();
+
+        return Segment::create(
+            $response['data']['uid'],
+            Point::create((float)$response['data']['leftSide']['x'], (float)$response['data']['leftSide']['y']),
+            Point::create((float)$response['data']['rightSide']['x'], (float)$response['data']['rightSide']['y']),
+            );
+    }
 }

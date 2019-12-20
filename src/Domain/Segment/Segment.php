@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Domain\Section;
+namespace App\Domain\Segment;
 
 
 final class Segment

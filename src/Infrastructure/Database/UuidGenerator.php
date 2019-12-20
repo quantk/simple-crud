@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Database;
 
 
-use App\Infrastructure\Database\UidGenerator;
+use App\Infrastructure\Database\Contract\UidGenerator;
 use Ramsey\Uuid\Uuid;
 
 final class UuidGenerator implements UidGenerator

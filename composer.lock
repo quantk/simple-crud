@@ -1,20 +1,20 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-        "This file is @generated automatically"
-    ],
-    "content-hash": "42c640723cd9a7714ce4c88f5374668f",
-    "packages": [
-        {
-            "name": "doctrine/annotations",
-            "version": "v1.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/annotations.git",
-                "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc"
-            },
-            "dist": {
+  "_readme": [
+    "This file locks the dependencies of your project to a known state",
+    "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+    "This file is @generated automatically"
+  ],
+  "content-hash": "32897cb4b2221bbec2490978104bf523",
+  "packages": [
+    {
+      "name": "doctrine/annotations",
+      "version": "v1.8.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/doctrine/annotations.git",
+        "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc"
+      },
+      "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/annotations/zipball/904dca4eb10715b92569fbcd79e201d5c349b6bc",
                 "reference": "904dca4eb10715b92569fbcd79e201d5c349b6bc",
@@ -6027,15 +6027,17 @@
             "time": "2019-11-24T13:36:37+00:00"
         }
     ],
-    "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": false,
-    "prefer-lowest": false,
-    "platform": {
-        "php": "^7.4.0",
-        "ext-ctype": "*",
-        "ext-iconv": "*"
-    },
-    "platform-dev": []
+  "aliases": [],
+  "minimum-stability": "stable",
+  "stability-flags": [],
+  "prefer-stable": false,
+  "prefer-lowest": false,
+  "platform": {
+    "php": "^7.4.0",
+    "ext-ctype": "*",
+    "ext-iconv": "*"
+  },
+  "platform-dev": {
+    "ext-json": "*"
+  }
 }

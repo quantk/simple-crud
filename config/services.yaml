@@ -24,10 +24,15 @@ services:
         tags: ['controller.service_arguments']
 
     App\Infrastructure\Database\UuidGenerator: ~
-    App\Infrastructure\Database\UidGenerator: '@App\Infrastructure\Database\UuidGenerator'
+    App\Infrastructure\Database\Contract\UidGenerator: '@App\Infrastructure\Database\UuidGenerator'
 
     App\Infrastructure\Http\Response\JsonResponder: ~
     App\Infrastructure\Http\Response\Responder: '@App\Infrastructure\Http\Response\JsonResponder'
+
+    App\Domain\Segment\SegmentRepository: ~
+    App\Domain\Segment\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
+
+    App\Domain\Segment\SegmentService: ~
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

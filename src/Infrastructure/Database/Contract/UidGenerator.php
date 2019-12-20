@@ -2,10 +2,8 @@
 declare(strict_types=1);
 
 
-namespace App\Infrastructure\Database;
+namespace App\Infrastructure\Database\Contract;
 
-
-use Ramsey\Uuid\Uuid;
 
 interface UidGenerator
 {
