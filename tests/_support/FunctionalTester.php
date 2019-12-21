@@ -50,9 +50,9 @@ class FunctionalTester extends \Codeception\Actor
         $response = $this->grabDecodedResponse();
 
         return Segment::create(
-            $response['data']['uid'],
-            Point::create((float)$response['data']['leftSide']['x'], (float)$response['data']['leftSide']['y']),
-            Point::create((float)$response['data']['rightSide']['x'], (float)$response['data']['rightSide']['y']),
+            $response['data']['segment']['uid'],
+            Point::create((float)$response['data']['segment']['leftSide']['x'], (float)$response['data']['segment']['leftSide']['y']),
+            Point::create((float)$response['data']['segment']['rightSide']['x'], (float)$response['data']['segment']['rightSide']['y']),
             );
     }
 }

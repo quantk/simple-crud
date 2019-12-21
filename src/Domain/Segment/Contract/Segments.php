@@ -9,9 +9,9 @@ use App\Domain\Segment\Segment;
 interface Segments
 {
     /**
-     * @param Segment $section
+     * @param Segment $segment
      */
-    public function add(Segment $section): void;
+    public function add(Segment $segment): void;
 
     /**
      * @param string $uid

@@ -7,14 +7,17 @@ namespace App\Infrastructure\Http\Controller;
 use App\Domain\Segment\Contract\Segments;
 use App\Domain\Segment\Point;
 use App\Domain\Segment\Segment;
-use App\Domain\Segment\SegmentService;
 use App\Infrastructure\Database\Contract\UidGenerator;
 use App\Infrastructure\Http\Response\Responder;
+use App\Infrastructure\Task\Task;
+use App\Infrastructure\Task\TaskRepository;
+use App\Infrastructure\Task\TaskStatus;
+use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class SegmentController
@@ -54,19 +57,26 @@ final class SegmentController
      * @param Request $request
      * @param Segments $segmentRepository
      * @param UidGenerator $generator
+     * @param MessageBusInterface $messageBus
+     * @param TaskRepository $taskRepository
      * @return Response
      * @Route("/create", name="segment_create", methods={"POST"})
+     * @throws DBALException
      */
     public function create(
         Request $request,
         Segments $segmentRepository,
-        UidGenerator $generator
+        UidGenerator $generator,
+        MessageBusInterface $messageBus,
+        TaskRepository $taskRepository
     )
     {
         $x1 = $request->get('x1');
         $y1 = $request->get('y1');
         $x2 = $request->get('x2');
         $y2 = $request->get('y2');
+
+        $needToRunAsync = $request->request->getBoolean('run_async', false);
 
         $uid = $generator->generate();
         $leftSide = Point::create((float)$x1, (float)$y1);
@@ -78,9 +88,20 @@ final class SegmentController
             $rightSide
         );
 
-        $segmentRepository->add($segment);
+        $task = null;
 
-        return $this->responder->item($segment);
+        if ($needToRunAsync === true) {
+            $task = Task::create($generator->generate(), $segment->uid, TaskStatus::idle());
+            $taskRepository->add($task);
+            $messageBus->dispatch($segment);
+        } else {
+            $segmentRepository->add($segment);
+        }
+
+        return $this->responder->item([
+            'segment' => $segment,
+            'task' => $task
+        ]);
     }
 
     /**
@@ -121,7 +142,6 @@ final class SegmentController
     /**
      * @param string $uid
      * @param Segments $segmentRepository
-     * @param SegmentService $segmentService
      * @param Request $request
      * @Route("/{uid}/point_position", name="segments_point_position", methods={"GET"})
      * @return Response
@@ -129,7 +149,6 @@ final class SegmentController
     public function pointPosition(
         string $uid,
         Segments $segmentRepository,
-        SegmentService $segmentService,
         Request $request
     )
     {
@@ -147,7 +166,7 @@ final class SegmentController
 
         $point = Point::create((float)$x1, (float)$y1);
 
-        $position = $segmentService->calculatePointPositionByVertical($segment, $point);
+        $position = $segment->calculatePointPositionByVertical($point);
 
         return $this->responder->item([
             'position' => $position

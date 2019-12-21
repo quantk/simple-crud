@@ -8,6 +8,8 @@ namespace App\Domain\Segment;
 /**
  * Class Point
  * @package App\Domain\Segment
+ * @property-read float $x
+ * @property-read float $y
  */
 final class Point
 {

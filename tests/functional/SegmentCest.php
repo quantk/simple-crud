@@ -1,6 +1,6 @@
 <?php namespace App\Tests;
 use App\Domain\Segment\Point;
-use App\Domain\Segment\SegmentService;
+use App\Domain\Segment\Segment;
 
 class SegmentCest
 {
@@ -74,7 +74,7 @@ class SegmentCest
         ]);
         $I->seeResponseCodeIsSuccessful();
         $response = $I->grabDecodedResponse();
-        $I->assertSame(SegmentService::UP_POSITION, $response['data']['position']);
+        $I->assertSame(Segment::UP_POSITION, $response['data']['position']);
 
         $I->sendGET("/segments/{$segment->uid}/point_position", [
             'x1' => 3,
@@ -82,7 +82,7 @@ class SegmentCest
         ]);
         $I->seeResponseCodeIsSuccessful();
         $response = $I->grabDecodedResponse();
-        $I->assertSame(SegmentService::DOWN_POSITION, $response['data']['position']);
+        $I->assertSame(Segment::DOWN_POSITION, $response['data']['position']);
 
         $I->sendGET("/segments/{$segment->uid}/point_position", [
             'x1' => 3,
@@ -90,6 +90,6 @@ class SegmentCest
         ]);
         $I->seeResponseCodeIsSuccessful();
         $response = $I->grabDecodedResponse();
-        $I->assertSame(SegmentService::CUT_POSITION, $response['data']['position']);
+        $I->assertSame(Segment::CUT_POSITION, $response['data']['position']);
     }
 }

@@ -28,17 +28,18 @@ final class SegmentRepository implements Segments
     }
 
     /**
-     * @param Segment $section
+     * @param Segment $segment
      * @throws DBALException
      */
-    public function add(Segment $section): void
+    public function add(Segment $segment): void
     {
         $statement = $this->connection->prepare(
-            'INSERT INTO "simple-crud".public.segments(uid, left_side, right_side) VALUES (?, ?, ?)'
+            'INSERT INTO "simple-crud".public.segments(uid, left_side, right_side, created_at) VALUES (?, ?, ?, ?)'
         );
-        $statement->bindValue(1, $section->uid, ParameterType::STRING);
-        $statement->bindValue(2, $section->leftSide->toString(), ParameterType::STRING);
-        $statement->bindValue(3, $section->rightSide->toString(), ParameterType::STRING);
+        $statement->bindValue(1, $segment->uid, ParameterType::STRING);
+        $statement->bindValue(2, $segment->leftSide->toString(), ParameterType::STRING);
+        $statement->bindValue(3, $segment->rightSide->toString(), ParameterType::STRING);
+        $statement->bindValue(4, $segment->createdAt->format('Y-m-d H:i:s'), ParameterType::INTEGER);
         $statement->execute();
     }
 
