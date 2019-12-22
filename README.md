@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/drumser/simple-crud.svg?branch=master)](https://travis-ci.org/drumser/simple-crud)
+
 # Task for review
 Необходимо сделать круд для одной сущности (Отрезок с двумя точками (x,y)). 
 

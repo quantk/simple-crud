@@ -34,7 +34,7 @@ final class SegmentRepository implements Segments
     public function add(Segment $segment): void
     {
         $statement = $this->connection->prepare(
-            'INSERT INTO "simple-crud".public.segments(uid, left_side, right_side, created_at) VALUES (?, ?, ?, ?)'
+            'INSERT INTO segments(uid, left_side, right_side, created_at) VALUES (?, ?, ?, ?)'
         );
         $statement->bindValue(1, $segment->uid, ParameterType::STRING);
         $statement->bindValue(2, $segment->leftSide->toString(), ParameterType::STRING);
@@ -51,7 +51,7 @@ final class SegmentRepository implements Segments
     public function find(string $uid): ?Segment
     {
         $statement = $this->connection->prepare(
-            'SELECT * FROM "simple-crud".public.segments WHERE uid = ? LIMIT 1'
+            'SELECT * FROM segments WHERE uid = ? LIMIT 1'
         );
         $statement->bindValue(1, $uid);
 
@@ -82,7 +82,7 @@ final class SegmentRepository implements Segments
     public function remove(string $uid): void
     {
         $statement = $this->connection->prepare(
-            'DELETE FROM "simple-crud".public.segments WHERE uid = ?'
+            'DELETE FROM segments WHERE uid = ?'
         );
         $statement->bindValue(1, $uid);
         $statement->execute();
@@ -95,7 +95,7 @@ final class SegmentRepository implements Segments
     public function all(): array
     {
         $segments = $this->connection->query(
-            'SELECT * FROM "simple-crud".public.segments'
+            'SELECT * FROM segments'
         )->fetchAll(FetchMode::ASSOCIATIVE);
 
         $result = [];

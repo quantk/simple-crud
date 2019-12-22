@@ -1,0 +1,18 @@
+language: php
+php:
+  - '7.4.0'
+services:
+  - postgresql
+env:
+  global:
+    - DATABASE_URL=postgresql://postgres:@127.0.0.1:5432/simplecrud?charset=utf8
+before_install:
+  - travis_retry composer self-update
+  - psql -c "create database simplecrud;" -U postgres
+  - cp .env.test .env
+install:
+  - composer install --no-interaction --prefer-source
+before_script:
+  - php bin/console doctrine:migrations:migrate --no-interaction
+script:
+  - php vendor/bin/codecept run

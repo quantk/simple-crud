@@ -34,7 +34,7 @@ final class TaskRepository
     public function save(Task $task): void
     {
         $statement = $this->connection->prepare('
-                        INSERT INTO "simple-crud".public.tasks(id, token, status, created_at, message) 
+                        INSERT INTO tasks(id, token, status, created_at, message) 
                         VALUES (:id, :token, :status, :created_at, :message)
                         ON CONFLICT (id) DO UPDATE SET token=:token, status=:status, created_at=:created_at, message=:message
         ');
@@ -54,7 +54,7 @@ final class TaskRepository
     public function findByToken(string $token): ?Task
     {
         $statement = $this->connection->prepare(
-            'SELECT * FROM "simple-crud".public.tasks WHERE token = ? LIMIT 1'
+            'SELECT * FROM tasks WHERE token = ? LIMIT 1'
         );
         $statement->bindValue(1, $token);
 
