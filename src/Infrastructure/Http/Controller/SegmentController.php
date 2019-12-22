@@ -92,7 +92,7 @@ final class SegmentController
 
         if ($needToRunAsync === true) {
             $task = Task::create($generator->generate(), $segment->uid, TaskStatus::idle());
-            $taskRepository->add($task);
+            $taskRepository->save($task);
             $messageBus->dispatch($segment);
         } else {
             $segmentRepository->add($segment);

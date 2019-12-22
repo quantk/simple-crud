@@ -50,16 +50,16 @@ final class CreateSegmentJob implements MessageHandlerInterface
 
         try {
             $task = $task->execute();
-            $this->taskRepository->add($task);
+            $this->taskRepository->save($task);
 
             $this->segmentRepository->add($segment);
 
             $task = $task->done();
-            $this->taskRepository->add($task);
+            $this->taskRepository->save($task);
             $this->logger->debug('CreateSegmentJob done');
         } catch (\Throwable $e) {
             $task = $task->error($e->getMessage());
-            $this->taskRepository->add($task);
+            $this->taskRepository->save($task);
             $this->logger->error("CreateSegmentJob error. Message: {$e->getMessage()}");
             throw $e;
         }

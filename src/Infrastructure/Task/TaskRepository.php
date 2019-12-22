@@ -31,7 +31,7 @@ final class TaskRepository
      * @param Task $task
      * @throws DBALException
      */
-    public function add(Task $task): void
+    public function save(Task $task): void
     {
         $statement = $this->connection->prepare('
                         INSERT INTO "simple-crud".public.tasks(id, token, status, created_at, message) 
