@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Task;
 
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Class Task
  * @package App\Infrastructure\Task
@@ -12,23 +14,48 @@ namespace App\Infrastructure\Task;
  * @property-read TaskStatus $status
  * @property-read ?string $message
  * @property-read \DateTimeImmutable $createdAt
+ * @ORM\Entity(repositoryClass="App\Infrastructure\Task\TaskRepository")
  */
-final class Task
+class Task
 {
-    public string $id;
-    public string $token;
-    public TaskStatus $status;
-    public ?string $message;
-    public \DateTimeImmutable $createdAt;
+    /**
+     * @var string
+     * @ORM\Id()
+     * @ORM\Column(type="uuid", unique=true)
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     */
+    private string $id;
+    /**
+     * @var string
+     * @ORM\Column(type="uuid", nullable=false, unique=true)
+     */
+    private string $token;
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private string $status;
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $message;
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private \DateTimeImmutable $createdAt;
 
     /**
      * Task constructor.
      * @param string $id
      * @param string $token
-     * @param TaskStatus $status
+     * @param string $status
      * @param string $message
+     * @throws \Exception
      */
-    private function __construct(string $id, string $token, TaskStatus $status, ?string $message)
+    private function __construct(string $id, string $token, string $status, ?string $message)
     {
         $this->id = $id;
         $this->token = $token;
@@ -37,15 +64,20 @@ final class Task
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    public static function create(string $id, string $token, TaskStatus $status, ?string $message = null): self
+    public static function create(string $id, string $token, string $status, ?string $message = null): self
     {
         return new static($id, $token, $status, $message);
+    }
+
+    public static function createIdle(string $id, string $token): self
+    {
+        return new static($id, $token, TaskStatus::STATUS_IDLE, null);
     }
 
     public function execute(): self
     {
         $newTask = clone $this;
-        $newTask->status = TaskStatus::executing();
+        $newTask->status = TaskStatus::STATUS_EXECUTING;
 
         return $newTask;
     }
@@ -53,7 +85,7 @@ final class Task
     public function done(): self
     {
         $newTask = clone $this;
-        $newTask->status = TaskStatus::done();
+        $newTask->status = TaskStatus::STATUS_DONE;
 
         return $newTask;
     }
@@ -61,7 +93,7 @@ final class Task
     public function error(string $message): self
     {
         $newTask = clone $this;
-        $newTask->status = TaskStatus::error();
+        $newTask->status = TaskStatus::STATUS_ERROR;
         $newTask->message = $message;
 
         return $newTask;

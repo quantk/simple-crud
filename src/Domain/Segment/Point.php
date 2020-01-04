@@ -8,14 +8,16 @@ namespace App\Domain\Segment;
 /**
  * Class Point
  * @package App\Domain\Segment
- * @property-read float $x
- * @property-read float $y
  */
 final class Point
 {
-    public float $x;
+    public const UP_POSITION = 'up';
+    public const DOWN_POSITION = 'down';
+    public const CUT_POSITION = 'cut';
 
-    public float $y;
+    private float $x;
+
+    private float $y;
 
     private function __construct(float $x, float $y)
     {
@@ -37,5 +39,34 @@ final class Point
     public function toString(): string
     {
         return "({$this->x},{$this->y})";
+    }
+
+    public function toArray()
+    {
+        return [
+            'x' => $this->x,
+            'y' => $this->y
+        ];
+    }
+
+    public function calculateVerticalPosition(Point $leftSide, Point $rightSide): float
+    {
+        $k = ($leftSide->y - $rightSide->y) / ($leftSide->x - $rightSide->x);
+        $b = $rightSide->y - $k * $rightSide->x;
+
+        return $k * $this->x + $b;
+    }
+
+    public function getPositionByVerticalCoordinate(float $verticalCoordinate)
+    {
+        if ($verticalCoordinate < $this->y) {
+            return self::UP_POSITION;
+        }
+
+        if ($verticalCoordinate > $this->y) {
+            return self::DOWN_POSITION;
+        }
+
+        return self::CUT_POSITION;
     }
 }

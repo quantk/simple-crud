@@ -17,7 +17,7 @@ interface Segments
      * @param string $uid
      * @return Segment|null
      */
-    public function find(string $uid): ?Segment;
+    public function findSegment(string $uid): ?Segment;
 
     /**
      * @param string $uid

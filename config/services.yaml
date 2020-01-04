@@ -20,8 +20,8 @@ services:
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Infrastructure\Http\Controller\:
-        resource: '../src/Infrastructure/Http/Controller'
-        tags: ['controller.service_arguments']
+      resource: '../src/Infrastructure/Http/Controller'
+      tags: ['controller.service_arguments']
 
     App\Infrastructure\Database\UuidGenerator: ~
     App\Infrastructure\Database\Contract\UidGenerator: '@App\Infrastructure\Database\UuidGenerator'
@@ -29,10 +29,11 @@ services:
     App\Infrastructure\Http\Response\JsonResponder: ~
     App\Infrastructure\Http\Response\Responder: '@App\Infrastructure\Http\Response\JsonResponder'
 
+    App\Infrastructure\Database\Flusher: ~
+
     App\Domain\Segment\SegmentRepository: ~
     App\Domain\Segment\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
 
-    App\Domain\Segment\SegmentService: ~
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones

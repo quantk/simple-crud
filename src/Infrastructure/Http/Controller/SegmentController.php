@@ -8,11 +8,11 @@ use App\Domain\Segment\Contract\Segments;
 use App\Domain\Segment\Point;
 use App\Domain\Segment\Segment;
 use App\Infrastructure\Database\Contract\UidGenerator;
+use App\Infrastructure\Database\Flusher;
 use App\Infrastructure\Http\Response\Responder;
 use App\Infrastructure\Task\Task;
 use App\Infrastructure\Task\TaskRepository;
-use App\Infrastructure\Task\TaskStatus;
-use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,14 +30,23 @@ final class SegmentController
      * @var Responder
      */
     private Responder $responder;
+    /**
+     * @var Flusher
+     */
+    private Flusher $flusher;
 
     /**
      * SegmentController constructor.
      * @param Responder $responder
+     * @param Flusher $flusher
      */
-    public function __construct(Responder $responder)
+    public function __construct(
+        Responder $responder,
+        Flusher $flusher
+    )
     {
         $this->responder = $responder;
+        $this->flusher = $flusher;
     }
 
     /**
@@ -60,8 +69,8 @@ final class SegmentController
      * @param MessageBusInterface $messageBus
      * @param TaskRepository $taskRepository
      * @return Response
+     * @throws ORMException
      * @Route("/create", name="segment_create", methods={"POST"})
-     * @throws DBALException
      */
     public function create(
         Request $request,
@@ -71,16 +80,15 @@ final class SegmentController
         TaskRepository $taskRepository
     )
     {
-        $x1 = $request->get('x1');
-        $y1 = $request->get('y1');
-        $x2 = $request->get('x2');
-        $y2 = $request->get('y2');
+        $leftSideRaw = $request->get('left_side');
+        $rightSideRaw = $request->get('right_side');
+
+        $leftSide = Point::create((float)$leftSideRaw['x'], (float)$leftSideRaw['y']);
+        $rightSide = Point::create((float)$rightSideRaw['x'], (float)$rightSideRaw['y']);
 
         $needToRunAsync = $request->request->getBoolean('run_async', false);
 
         $uid = $generator->generate();
-        $leftSide = Point::create((float)$x1, (float)$y1);
-        $rightSide = Point::create((float)$x2, (float)$y2);
 
         $segment = Segment::create(
             $uid,
@@ -91,15 +99,18 @@ final class SegmentController
         $task = null;
 
         if ($needToRunAsync === true) {
-            $task = Task::create($generator->generate(), $segment->uid, TaskStatus::idle());
-            $taskRepository->save($task);
+            $task = Task::createIdle($generator->generate(), $segment->getId());
+            $taskRepository->add($task);
+            $this->flusher->flush();
             $messageBus->dispatch($segment);
         } else {
             $segmentRepository->add($segment);
         }
 
+        $this->flusher->flush();
+
         return $this->responder->item([
-            'segment' => $segment,
+            'segment' => $segment->toArray(),
             'task' => $task
         ]);
     }
@@ -117,6 +128,7 @@ final class SegmentController
     {
         $segmentRepository->remove($uid);
 
+        $this->flusher->flush();
         return $this->responder->emptyResponse(201);
     }
 
@@ -131,7 +143,7 @@ final class SegmentController
         Segments $segmentRepository
     )
     {
-        $segment = $segmentRepository->find($uid);
+        $segment = $segmentRepository->findSegment($uid);
         if ($segment === null) {
             throw new NotFoundHttpException();
         }
@@ -152,7 +164,7 @@ final class SegmentController
         Request $request
     )
     {
-        $segment = $segmentRepository->find($uid);
+        $segment = $segmentRepository->findSegment($uid);
         if ($segment === null) {
             throw new NotFoundHttpException();
         }

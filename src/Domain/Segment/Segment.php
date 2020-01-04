@@ -5,24 +5,47 @@ declare(strict_types=1);
 namespace App\Domain\Segment;
 
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Class Segment
  * @package App\Domain\Segment
- * @property-read string $uid
- * @property-read Point $leftSide
- * @property-read Point $rightSide
- * @property-read \DateTimeImmutable $createdAt
+ * @ORM\Entity(repositoryClass="App\Domain\Segment\SegmentRepository")
  */
-final class Segment
+class Segment
 {
-    public const UP_POSITION = 'up';
-    public const DOWN_POSITION = 'down';
-    public const CUT_POSITION = 'cut';
 
-    public string $uid;
-    public Point $leftSide;
-    public Point $rightSide;
-    public \DateTimeImmutable $createdAt;
+    /**
+     * @var string|null
+     * @ORM\Id()
+     * @ORM\Column(type="uuid", unique=true, name="uid")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     */
+    private ?string $uid;
+    /**
+     * @var Point
+     * @ORM\Column(type="point", name="left_side")
+     */
+    private Point $leftSide;
+    /**
+     * @var Point
+     * @ORM\Column(type="point", name="right_side")
+     */
+    private Point $rightSide;
+    /**
+     * @var \DateTimeImmutable
+     * @ORM\Column(type="datetime_immutable", name="created_at")
+     */
+    private \DateTimeImmutable $createdAt;
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->uid;
+    }
 
     private function __construct(string $uid, Point $leftSide, Point $rightSide)
     {
@@ -41,19 +64,18 @@ final class Segment
     {
         $segment = $this;
 
-        $k = ($segment->leftSide->y - $segment->rightSide->y) / ($segment->leftSide->x - $segment->rightSide->x);
-        $b = $segment->rightSide->y - $k * $segment->rightSide->x;
+        $verticalCoordinate = $point->calculateVerticalPosition($segment->leftSide, $segment->rightSide);
 
-        $yPosition = $k * $point->x + $b;
+        return $point->getPositionByVerticalCoordinate($verticalCoordinate);
+    }
 
-        if ($yPosition < $point->y) {
-            return self::UP_POSITION;
-        }
-
-        if ($yPosition > $point->y) {
-            return self::DOWN_POSITION;
-        }
-
-        return self::CUT_POSITION;
+    public function toArray()
+    {
+        return [
+            'uid' => $this->uid,
+            'left_side' => $this->leftSide->toArray(),
+            'right_side' => $this->rightSide->toArray(),
+            'created_at' => $this->createdAt->format('Y-m-d H:i:s')
+        ];
     }
 }

@@ -40,10 +40,8 @@ class FunctionalTester extends \Codeception\Actor
     public function haveSegment(Point $leftSide, Point $rightSide): Segment
     {
         $this->sendPOST('/segments/create', [
-            'x1' => $leftSide->x,
-            'y1' => $leftSide->y,
-            'x2' => $rightSide->x,
-            'y2' => $rightSide->y
+            'left_side' => $leftSide->toArray(),
+            'right_side' => $rightSide->toArray()
         ]);
 
         $this->seeResponseCodeIsSuccessful();
@@ -51,8 +49,8 @@ class FunctionalTester extends \Codeception\Actor
 
         return Segment::create(
             $response['data']['segment']['uid'],
-            Point::create((float)$response['data']['segment']['leftSide']['x'], (float)$response['data']['segment']['leftSide']['y']),
-            Point::create((float)$response['data']['segment']['rightSide']['x'], (float)$response['data']['segment']['rightSide']['y']),
+            Point::create((float)$response['data']['segment']['left_side']['x'], (float)$response['data']['segment']['left_side']['y']),
+            Point::create((float)$response['data']['segment']['right_side']['x'], (float)$response['data']['segment']['right_side']['y']),
             );
     }
 }

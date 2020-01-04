@@ -6,6 +6,7 @@ namespace App\Infrastructure\Job;
 
 use App\Domain\Segment\Contract\Segments;
 use App\Domain\Segment\Segment;
+use App\Infrastructure\Database\Flusher;
 use App\Infrastructure\Task\TaskRepository;
 use Doctrine\DBAL\DBALException;
 use Psr\Log\LoggerInterface;
@@ -22,16 +23,22 @@ final class CreateSegmentJob implements MessageHandlerInterface
      * @var LoggerInterface
      */
     private LoggerInterface $logger;
+    /**
+     * @var Flusher
+     */
+    private Flusher $flusher;
 
     public function __construct(
         Segments $segmentRepository,
         TaskRepository $taskRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Flusher $flusher
     )
     {
         $this->segmentRepository = $segmentRepository;
         $this->taskRepository = $taskRepository;
         $this->logger = $logger;
+        $this->flusher = $flusher;
     }
 
     /**
@@ -50,16 +57,16 @@ final class CreateSegmentJob implements MessageHandlerInterface
 
         try {
             $task = $task->execute();
-            $this->taskRepository->save($task);
+            $this->flusher->flush();
 
             $this->segmentRepository->add($segment);
 
             $task = $task->done();
-            $this->taskRepository->save($task);
+            $this->flusher->flush();
             $this->logger->debug('CreateSegmentJob done');
         } catch (\Throwable $e) {
-            $task = $task->error($e->getMessage());
-            $this->taskRepository->save($task);
+            $task->error($e->getMessage());
+            $this->flusher->flush();
             $this->logger->error("CreateSegmentJob error. Message: {$e->getMessage()}");
             throw $e;
         }
