@@ -113,7 +113,7 @@ final class SegmentController
 
         return $this->responder->item([
             'segment' => $segment->toArray(),
-            'task' => $task->toArray()
+            'task' => $task ? $task->toArray() : null
         ]);
     }
 
