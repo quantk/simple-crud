@@ -19,8 +19,7 @@ class Segment
      * @var string|null
      * @ORM\Id()
      * @ORM\Column(type="uuid", unique=true, name="uid")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private ?string $uid;
     /**

@@ -22,8 +22,7 @@ class Task
      * @var string
      * @ORM\Id()
      * @ORM\Column(type="uuid", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private string $id;
     /**
@@ -74,28 +73,29 @@ class Task
         return new static($id, $token, TaskStatus::STATUS_IDLE, null);
     }
 
-    public function execute(): self
+    public function execute(): void
     {
-        $newTask = clone $this;
-        $newTask->status = TaskStatus::STATUS_EXECUTING;
-
-        return $newTask;
+        $this->status = TaskStatus::STATUS_EXECUTING;
     }
 
-    public function done(): self
+    public function done(): void
     {
-        $newTask = clone $this;
-        $newTask->status = TaskStatus::STATUS_DONE;
-
-        return $newTask;
+        $this->status = TaskStatus::STATUS_DONE;
     }
 
-    public function error(string $message): self
+    public function error(string $message): void
     {
-        $newTask = clone $this;
-        $newTask->status = TaskStatus::STATUS_ERROR;
-        $newTask->message = $message;
+        $this->status = TaskStatus::STATUS_ERROR;
+        $this->message = $message;
+    }
 
-        return $newTask;
+    public function toArray()
+    {
+        return [
+            'token' => $this->token,
+            'status' => $this->status,
+            'message' => $this->message,
+            'created_at' => $this->createdAt->format('Y-m-d H:i:s')
+        ];
     }
 }

@@ -49,19 +49,19 @@ final class CreateSegmentJob implements MessageHandlerInterface
     public function __invoke(Segment $segment)
     {
         $this->logger->debug('Executing CreateSegmentJob');
-        $task = $this->taskRepository->findByToken($segment->uid);
+        $task = $this->taskRepository->findByToken($segment->getId());
 
         if ($task === null) {
-            throw new \RuntimeException("Task not found for segment[{$segment->uid}]");
+            throw new \RuntimeException("Task not found for segment[{$segment->getId()}]");
         }
 
         try {
-            $task = $task->execute();
+            $task->execute();
             $this->flusher->flush();
 
             $this->segmentRepository->add($segment);
 
-            $task = $task->done();
+            $task->done();
             $this->flusher->flush();
             $this->logger->debug('CreateSegmentJob done');
         } catch (\Throwable $e) {

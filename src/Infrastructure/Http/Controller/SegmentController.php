@@ -58,7 +58,9 @@ final class SegmentController
         Segments $segmentRepository
     )
     {
-        $segments = $segmentRepository->all();
+        $segments = array_map(function (Segment $segment) {
+            return $segment->toArray();
+        }, $segmentRepository->all());
         return $this->responder->collection($segments);
     }
 
@@ -80,8 +82,8 @@ final class SegmentController
         TaskRepository $taskRepository
     )
     {
-        $leftSideRaw = $request->get('left_side');
-        $rightSideRaw = $request->get('right_side');
+        $leftSideRaw = $request->request->get('left_side');
+        $rightSideRaw = $request->request->get('right_side');
 
         $leftSide = Point::create((float)$leftSideRaw['x'], (float)$leftSideRaw['y']);
         $rightSide = Point::create((float)$rightSideRaw['x'], (float)$rightSideRaw['y']);
@@ -111,7 +113,7 @@ final class SegmentController
 
         return $this->responder->item([
             'segment' => $segment->toArray(),
-            'task' => $task
+            'task' => $task->toArray()
         ]);
     }
 
@@ -148,7 +150,7 @@ final class SegmentController
             throw new NotFoundHttpException();
         }
 
-        return $this->responder->item($segment);
+        return $this->responder->item($segment->toArray());
     }
 
     /**

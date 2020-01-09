@@ -50,6 +50,6 @@ final class TaskController
             throw new NotFoundHttpException();
         }
 
-        return $this->responder->item($task);
+        return $this->responder->item($task->toArray());
     }
 }

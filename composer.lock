@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "8cbb0313d8218850ed3b4c8ebf1c10ee",
+  "content-hash": "6d6c2e116969523220a079278016b79a",
   "packages": [
     {
       "name": "doctrine/annotations",
@@ -25,16 +25,16 @@
         "php": "^7.1"
       },
       "require-dev": {
-                "doctrine/cache": "1.*",
-                "phpunit/phpunit": "^7.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.7.x-dev"
-                }
-            },
-            "autoload": {
+        "doctrine/cache": "1.*",
+        "phpunit/phpunit": "^7.5"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "1.7.x-dev"
+        }
+      },
+      "autoload": {
                 "psr-4": {
                     "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
                 }
@@ -1633,16 +1633,16 @@
             ],
             "authors": [
                 {
-                    "name": "Marijn Huizendveld",
-                    "email": "marijn.huizendveld@gmail.com"
+                  "name": "Marijn Huizendveld",
+                  "email": "marijn.huizendveld@gmail.com"
                 },
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "http://benramsey.com"
-                }
+              {
+                "name": "Ben Ramsey",
+                "email": "ben@benramsey.com",
+                "homepage": "http://benramsey.com"
+              }
             ],
-            "description": "Allow the use of a ramsey/uuid UUID as Doctrine field type.",
+          "description": "Allow the use of a ramsey/uuid UUID as Doctrine field type.",
           "homepage": "https://github.com/ramsey/uuid-doctrine",
           "keywords": [
             "doctrine",
@@ -1652,6 +1652,65 @@
           ],
           "time": "2018-08-11T21:01:22+00:00"
         },
+    {
+      "name": "symfony-bundles/json-request-bundle",
+      "version": "v3.0.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/symfony-bundles/json-request-bundle.git",
+        "reference": "108d37eda451b62d3333907905ef2d1687b9ce92"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/symfony-bundles/json-request-bundle/zipball/108d37eda451b62d3333907905ef2d1687b9ce92",
+        "reference": "108d37eda451b62d3333907905ef2d1687b9ce92",
+        "shasum": ""
+      },
+      "require": {
+        "doctrine/annotations": "~1.1",
+        "php": "^7.3",
+        "symfony/framework-bundle": "^4.3||^5.0"
+      },
+      "require-dev": {
+        "phpunit/php-code-coverage": "^5.0",
+        "phpunit/phpunit": "^6.4",
+        "symfony/phpunit-bridge": "^4.3||^5.0",
+        "symfony/yaml": "^4.3||^5.0"
+      },
+      "type": "symfony-bundle",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "3.x-dev"
+        }
+      },
+      "autoload": {
+        "psr-4": {
+          "SymfonyBundles\\JsonRequestBundle\\": ""
+        },
+        "exclude-from-classmap": [
+          "/Tests/"
+        ]
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Dmitry Khaperets",
+          "email": "khaperets@gmail.com"
+        }
+      ],
+      "description": "Symfony JsonRequest Bundle",
+      "homepage": "https://github.com/symfony-bundles/json-request-bundle",
+      "keywords": [
+        "angular",
+        "bundle",
+        "json",
+        "symfony"
+      ],
+      "time": "2019-11-28T17:09:29+00:00"
+    },
     {
       "name": "symfony/apache-pack",
       "version": "v1.0.1",
@@ -1685,16 +1744,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/symfony/cache/zipball/6e8d978878ae5de705ec9fabbb6011cc18776bc9",
-                "reference": "6e8d978878ae5de705ec9fabbb6011cc18776bc9",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2.5",
-                "psr/cache": "~1.0",
-                "psr/log": "~1.0",
-                "symfony/cache-contracts": "^1.1.7|^2",
-                "symfony/service-contracts": "^1.1|^2",
-                "symfony/var-exporter": "^4.4|^5.0"
+        "reference": "6e8d978878ae5de705ec9fabbb6011cc18776bc9",
+        "shasum": ""
+      },
+      "require": {
+        "php": "^7.2.5",
+        "psr/cache": "~1.0",
+        "psr/log": "~1.0",
+        "symfony/cache-contracts": "^1.1.7|^2",
+        "symfony/service-contracts": "^1.1|^2",
+        "symfony/var-exporter": "^4.4|^5.0"
             },
             "conflict": {
                 "doctrine/dbal": "<2.5",
@@ -2775,16 +2834,16 @@
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-              {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-              }
-            ],
+          "authors": [
+            {
+              "name": "Fabien Potencier",
+              "email": "fabien@symfony.com"
+            },
+            {
+              "name": "Symfony Community",
+              "homepage": "https://symfony.com/contributors"
+            }
+          ],
           "description": "Symfony HttpKernel Component",
           "homepage": "https://symfony.com",
           "time": "2019-12-19T18:35:03+00:00"
@@ -2874,16 +2933,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/symfony/mime/zipball/0e6a4ced216e49d457eddcefb61132173a876d79",
-                "reference": "0e6a4ced216e49d457eddcefb61132173a876d79",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2.5",
-                "symfony/polyfill-intl-idn": "^1.10",
-                "symfony/polyfill-mbstring": "^1.0"
-            },
-            "conflict": {
-                "symfony/mailer": "<4.4"
+        "reference": "0e6a4ced216e49d457eddcefb61132173a876d79",
+        "shasum": ""
+      },
+      "require": {
+        "php": "^7.2.5",
+        "symfony/polyfill-intl-idn": "^1.10",
+        "symfony/polyfill-mbstring": "^1.0"
+      },
+      "conflict": {
+        "symfony/mailer": "<4.4"
             },
             "require-dev": {
                 "egulias/email-validator": "^2.1.10",
@@ -3637,17 +3696,18 @@
                     "Zend\\Code\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Extensions to the PHP Reflection API, static code scanning, and code generation",
-            "keywords": [
-                "ZendFramework",
-                "code",
-                "zf"
-            ],
-            "time": "2019-12-10T19:21:15+00:00"
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "BSD-3-Clause"
+          ],
+          "description": "Extensions to the PHP Reflection API, static code scanning, and code generation",
+          "keywords": [
+            "ZendFramework",
+            "code",
+            "zf"
+          ],
+          "abandoned": "laminas/laminas-code",
+          "time": "2019-12-10T19:21:15+00:00"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -3691,17 +3751,18 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+              "BSD-3-Clause"
             ],
-            "description": "Trigger and listen to events within a PHP application",
-            "homepage": "https://github.com/zendframework/zend-eventmanager",
-            "keywords": [
-                "event",
-                "eventmanager",
-                "events",
-                "zf2"
-            ],
-            "time": "2018-04-25T15:33:34+00:00"
+          "description": "Trigger and listen to events within a PHP application",
+          "homepage": "https://github.com/zendframework/zend-eventmanager",
+          "keywords": [
+            "event",
+            "eventmanager",
+            "events",
+            "zf2"
+          ],
+          "abandoned": "laminas/laminas-eventmanager",
+          "time": "2018-04-25T15:33:34+00:00"
         }
     ],
     "packages-dev": [
@@ -4488,15 +4549,15 @@
                 "psr-4": {
                     "DeepCopy\\": "src/DeepCopy/"
                 },
-                "files": [
-                    "src/DeepCopy/deep_copy.php"
-                ]
+              "files": [
+                "src/DeepCopy/deep_copy.php"
+              ]
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Create deep copies (clones) of your objects",
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "MIT"
+          ],
+          "description": "Create deep copies (clones) of your objects",
           "keywords": [
             "clone",
             "copy",
@@ -4569,16 +4630,16 @@
         "dist": {
           "type": "zip",
           "url": "https://api.github.com/repos/phar-io/manifest/zipball/7761fcacf03b4d4f16e7ccb606d4879ca431fcf4",
-                "reference": "7761fcacf03b4d4f16e7ccb606d4879ca431fcf4",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-phar": "*",
-                "phar-io/version": "^2.0",
-                "php": "^5.6 || ^7.0"
-            },
-            "type": "library",
+          "reference": "7761fcacf03b4d4f16e7ccb606d4879ca431fcf4",
+          "shasum": ""
+        },
+        "require": {
+          "ext-dom": "*",
+          "ext-phar": "*",
+          "phar-io/version": "^2.0",
+          "php": "^5.6 || ^7.0"
+        },
+        "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
@@ -6072,16 +6133,16 @@
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-              {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-              }
-            ],
+          "authors": [
+            {
+              "name": "Fabien Potencier",
+              "email": "fabien@symfony.com"
+            },
+            {
+              "name": "Symfony Community",
+              "homepage": "https://symfony.com/contributors"
+            }
+          ],
           "description": "Symfony DomCrawler Component",
           "homepage": "https://symfony.com",
           "time": "2019-11-18T17:27:11+00:00"
@@ -6165,16 +6226,16 @@
         "dist": {
           "type": "zip",
           "url": "https://api.github.com/repos/theseer/tokenizer/zipball/11336f6f84e16a720dae9d8e6ed5019efa85a0f9",
-                "reference": "11336f6f84e16a720dae9d8e6ed5019efa85a0f9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-tokenizer": "*",
-                "ext-xmlwriter": "*",
-                "php": "^7.0"
-            },
-            "type": "library",
+          "reference": "11336f6f84e16a720dae9d8e6ed5019efa85a0f9",
+          "shasum": ""
+        },
+        "require": {
+          "ext-dom": "*",
+          "ext-tokenizer": "*",
+          "ext-xmlwriter": "*",
+          "php": "^7.0"
+        },
+        "type": "library",
             "autoload": {
                 "classmap": [
                     "src/"
@@ -6224,16 +6285,16 @@
                     "Webmozart\\Assert\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
+          "notification-url": "https://packagist.org/downloads/",
+          "license": [
+            "MIT"
+          ],
+          "authors": [
+            {
+              "name": "Bernhard Schussek",
+              "email": "bschussek@gmail.com"
+            }
+          ],
           "description": "Assertions to validate method input/output with nice error messages.",
           "keywords": [
             "assert",
