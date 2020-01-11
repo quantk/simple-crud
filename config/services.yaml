@@ -22,7 +22,12 @@ services:
     # as action arguments even if you don't extend any base controller class
     App\Infrastructure\Http\Controller\:
         resource: '../src/Infrastructure/Http/Controller'
+        exclude: '../src/Infrastructure/Http/Controller/Resolver/ResolverError.php'
         tags: ['controller.service_arguments']
+
+    App\Infrastructure\Hook\ResolverExceptionHook:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
     App\Infrastructure\Http\Controller\Resolver\CreateSegmentRequestResolver: ~
     App\Infrastructure\Http\Controller\Resolver\PointPositionRequestResolver: ~
