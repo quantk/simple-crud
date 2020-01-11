@@ -72,7 +72,6 @@ final class CreateSegmentRequestResolver implements ArgumentValueResolverInterfa
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         $data = $request->request->all();
-        $data['left_side']['x'] = null;
         $violations = $this->validator->validate($data, $this->constraint());
 
         if (count($violations) > 0) {
