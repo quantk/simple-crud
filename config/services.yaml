@@ -15,13 +15,17 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude:
+            - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Infrastructure\Http\Controller\:
-      resource: '../src/Infrastructure/Http/Controller'
-      tags: ['controller.service_arguments']
+        resource: '../src/Infrastructure/Http/Controller'
+        tags: ['controller.service_arguments']
+
+    App\Infrastructure\Http\Controller\Resolver\CreateSegmentRequestResolver: ~
+    App\Infrastructure\Http\Controller\Resolver\PointPositionRequestResolver: ~
 
     App\Infrastructure\Database\UuidGenerator: ~
     App\Infrastructure\Database\Contract\UidGenerator: '@App\Infrastructure\Database\UuidGenerator'
@@ -35,5 +39,6 @@ services:
     App\Domain\Segment\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
 
 
-  # add more service definitions when explicit configuration is needed
+
+    # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones

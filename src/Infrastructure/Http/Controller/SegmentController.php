@@ -5,10 +5,11 @@ namespace App\Infrastructure\Http\Controller;
 
 
 use App\Domain\Segment\Contract\Segments;
-use App\Domain\Segment\Point;
 use App\Domain\Segment\Segment;
 use App\Infrastructure\Database\Contract\UidGenerator;
 use App\Infrastructure\Database\Flusher;
+use App\Infrastructure\Http\Request\CreateSegmentRequest;
+use App\Infrastructure\Http\Request\PointPositionRequest;
 use App\Infrastructure\Http\Response\Responder;
 use App\Infrastructure\Task\Task;
 use App\Infrastructure\Task\TaskRepository;
@@ -75,32 +76,24 @@ final class SegmentController
      * @Route("/create", name="segment_create", methods={"POST"})
      */
     public function create(
-        Request $request,
+        CreateSegmentRequest $request,
         Segments $segmentRepository,
         UidGenerator $generator,
         MessageBusInterface $messageBus,
         TaskRepository $taskRepository
     )
     {
-        $leftSideRaw = $request->request->get('left_side');
-        $rightSideRaw = $request->request->get('right_side');
-
-        $leftSide = Point::create((float)$leftSideRaw['x'], (float)$leftSideRaw['y']);
-        $rightSide = Point::create((float)$rightSideRaw['x'], (float)$rightSideRaw['y']);
-
-        $needToRunAsync = $request->request->getBoolean('run_async', false);
-
         $uid = $generator->generate();
 
         $segment = Segment::create(
             $uid,
-            $leftSide,
-            $rightSide
+            $request->leftSide,
+            $request->rightSide
         );
 
         $task = null;
 
-        if ($needToRunAsync === true) {
+        if ($request->runAsync === true) {
             $task = Task::createIdle($generator->generate(), $segment->getId());
             $taskRepository->add($task);
             $this->flusher->flush();
@@ -156,14 +149,14 @@ final class SegmentController
     /**
      * @param string $uid
      * @param Segments $segmentRepository
-     * @param Request $request
-     * @Route("/{uid}/point_position", name="segments_point_position", methods={"GET"})
+     * @param PointPositionRequest $request
      * @return Response
+     * @Route("/{uid}/point_position", name="segments_point_position", methods={"GET"})
      */
     public function pointPosition(
         string $uid,
         Segments $segmentRepository,
-        Request $request
+        PointPositionRequest $request
     )
     {
         $segment = $segmentRepository->findSegment($uid);
@@ -171,16 +164,7 @@ final class SegmentController
             throw new NotFoundHttpException();
         }
 
-        $x1 = $request->get('x1');
-        $y1 = $request->get('y1');
-
-        if ($x1 === null || $y1 === null) {
-            return $this->responder->error(['Point is required'], 400);
-        }
-
-        $point = Point::create((float)$x1, (float)$y1);
-
-        $position = $segment->calculatePointPositionByVertical($point);
+        $position = $segment->calculatePointPositionByVertical($request->point);
 
         return $this->responder->item([
             'position' => $position
