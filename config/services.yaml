@@ -39,8 +39,8 @@ services:
 
     App\Infrastructure\Database\Flusher: ~
 
-    App\Segment\Domain\SegmentRepository: ~
-    #    App\Segment\Domain\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
+    App\Segment\SegmentRepository: ~
+    App\Segment\Domain\Segments: '@App\Segment\SegmentRepository'
 
 
 

@@ -20,6 +20,6 @@ doctrine:
                 prefix: App\Segment\Domain\Segment
             AppSegmentTask:
                 type: annotation
-                dir: '%kernel.project_dir%/src/Segment/Task'
+                dir: '%kernel.project_dir%/src/Infrastructure/Task'
                 is_bundle: false
-                prefix: App\Segment\Task\Task
+                prefix: App\Infrastructure\Task\Task

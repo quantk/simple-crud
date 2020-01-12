@@ -10,11 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Segment
  * @package App\Domain\Segment
- * @ORM\Entity(repositoryClass="App\Segment\Domain\SegmentRepository")
+ * @ORM\Entity(repositoryClass="App\Segment\SegmentRepository")
  */
 class Segment
 {
-
     /**
      * @var string|null
      * @ORM\Id()

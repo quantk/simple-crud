@@ -7,16 +7,17 @@ namespace App\Segment\Http\Controller;
 use App\Infrastructure\Database\Contract\UidGenerator;
 use App\Infrastructure\Database\Flusher;
 use App\Infrastructure\Http\Response\Responder;
+use App\Infrastructure\Task\Task;
+use App\Infrastructure\Task\TaskRepository;
 use App\Segment\Domain\Segment;
+use App\Segment\Domain\SegmentCreator;
 use App\Segment\Domain\Segments;
 use App\Segment\Http\Request\CreateSegmentRequest;
 use App\Segment\Http\Request\PointPositionRequest;
-use App\Segment\Task\Task;
-use App\Segment\Task\TaskRepository;
+use App\Segment\Job\NewSegment;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -66,45 +67,33 @@ final class SegmentController
 
     /**
      * @param CreateSegmentRequest $request
-     * @param Segments $segmentRepository
      * @param UidGenerator $generator
-     * @param MessageBusInterface $messageBus
      * @param TaskRepository $taskRepository
+     * @param SegmentCreator $creator
      * @return Response
      * @throws ORMException
      * @Route("/create", name="segment_create", methods={"POST"})
      */
     public function create(
         CreateSegmentRequest $request,
-        Segments $segmentRepository,
         UidGenerator $generator,
-        MessageBusInterface $messageBus,
-        TaskRepository $taskRepository
+        TaskRepository $taskRepository,
+        SegmentCreator $creator
     )
     {
-        $uid = $generator->generate();
+        $newSegmentId = $generator->generate();
 
-        $segment = Segment::create(
-            $uid,
-            $request->leftSide,
-            $request->rightSide
-        );
+        $newSegment = new NewSegment($newSegmentId, $request->leftSide, $request->rightSide, $request->runAsync);
 
-        $task = null;
+        $task = Task::createIdle($generator->generate(), $newSegmentId);
+        $taskRepository->add($task);
 
-        if ($request->runAsync === true) {
-            $task = Task::createIdle($generator->generate(), $segment->getId());
-            $taskRepository->add($task);
-            $this->flusher->flush();
-            $messageBus->dispatch($segment);
-        } else {
-            $segmentRepository->add($segment);
-        }
+        $creator->create($newSegment);
 
         $this->flusher->flush();
 
         return $this->responder->item([
-            'segment' => $segment->toArray(),
+            'segment_id' => $newSegmentId,
             'task' => $task ? $task->toArray() : null
         ]);
     }

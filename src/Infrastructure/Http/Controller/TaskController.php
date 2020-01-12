@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Segment\Http\Controller;
+namespace App\Infrastructure\Http\Controller;
 
 
 use App\Infrastructure\Http\Response\Responder;
-use App\Segment\Task\TaskRepository;
+use App\Infrastructure\Task\TaskRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;

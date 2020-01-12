@@ -61,6 +61,7 @@ final class CreateSegmentRequestResolver implements ArgumentValueResolverInterfa
         return new Assert\Collection([
             'left_side' => new Assert\Collection($pointConstraint),
             'right_side' => new Assert\Collection($pointConstraint),
+//            'run_async' => [new Assert\NotBlank(['allowNull' => true])]
         ]);
     }
 
@@ -73,7 +74,7 @@ final class CreateSegmentRequestResolver implements ArgumentValueResolverInterfa
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
         $data = $request->request->all();
-        $violations = $this->validator->validate($data, $this->constraint());
+        $violations = $this->validator->validate(['left_side' => $data['left_side'], 'right_side' => $data['right_side']], $this->constraint());
 
         if (count($violations) > 0) {
             throw new ResolverError($violations);

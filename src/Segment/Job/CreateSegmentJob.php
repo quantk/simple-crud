@@ -5,9 +5,8 @@ namespace App\Segment\Job;
 
 
 use App\Infrastructure\Database\Flusher;
-use App\Segment\Domain\Segment;
+use App\Infrastructure\Task\TaskRepository;
 use App\Segment\Domain\Segments;
-use App\Segment\Task\TaskRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -41,24 +40,24 @@ final class CreateSegmentJob implements MessageHandlerInterface
     }
 
     /**
-     * @param Segment $segment
+     * @param NewSegment $newSegment
      * @throws \Throwable
      */
-    public function __invoke(Segment $segment)
+    public function __invoke(NewSegment $newSegment)
     {
         $this->logger->debug('Executing CreateSegmentJob');
-        $task = $this->taskRepository->findByToken($segment->getId());
+        $task = $this->taskRepository->findByToken($newSegment->taskToken);
 
         if ($task === null) {
-            throw new \RuntimeException("Task not found for segment[{$segment->getId()}]");
+            throw new \RuntimeException("Task not found for segment[{$newSegment->taskToken}]");
         }
 
         try {
             $task->execute();
             $this->flusher->flush();
 
+            $segment = $newSegment->assemble();
             $this->segmentRepository->add($segment);
-
             $task->done();
             $this->flusher->flush();
             $this->logger->debug('CreateSegmentJob done');

@@ -1,3 +1,7 @@
 controllers:
     resource: ../../src/Segment/Http/Controller/
     type: annotation
+
+infrastructure_controllers:
+    resource: ../../src/Infrastructure/Http/Controller
+    type: annotation
