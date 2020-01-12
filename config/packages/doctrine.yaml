@@ -1,6 +1,8 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        mapping_types:
+            point: point
         types:
             point:  App\Infrastructure\Database\DBAL\PointType
 
@@ -8,7 +10,7 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '5.7'
     orm:
-        auto_mapping: true\
+        auto_mapping: true
         proxy_namespace: Proxies
         proxy_dir: '%kernel.cache_dir%/doctrine/orm/Proxies'
         default_entity_manager: default
