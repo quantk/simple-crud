@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Task;
+namespace App\Segment\Task;
 
 
-use App\Domain\Segment\Segment;
+use App\Segment\Domain\Segment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;

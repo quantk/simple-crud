@@ -2,8 +2,9 @@
 
 namespace App\Tests;
 
-use App\Domain\Segment\Point;
-use App\Domain\Segment\Segment;
+
+use App\Segment\Domain\Point;
+use App\Segment\Domain\Segment;
 
 /**
  * Inherited Methods
@@ -27,7 +28,6 @@ class FunctionalTester extends \Codeception\Actor
     /**
      * Define custom actions here
      */
-
 
     /**
      * @return array

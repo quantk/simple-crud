@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Http\Controller\Resolver;
+namespace App\Segment\Http\Controller\Resolver;
 
 
-use App\Domain\Segment\Point;
-use App\Infrastructure\Http\Request\PointPositionRequest;
+use App\Infrastructure\Http\Resolver\ResolverError;
+use App\Segment\Domain\Point;
+use App\Segment\Http\Request\PointPositionRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;

@@ -1,20 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Http\Controller;
+namespace App\Segment\Http\Controller;
 
 
-use App\Domain\Segment\Contract\Segments;
-use App\Domain\Segment\Segment;
 use App\Infrastructure\Database\Contract\UidGenerator;
 use App\Infrastructure\Database\Flusher;
-use App\Infrastructure\Http\Request\CreateSegmentRequest;
-use App\Infrastructure\Http\Request\PointPositionRequest;
 use App\Infrastructure\Http\Response\Responder;
-use App\Infrastructure\Task\Task;
-use App\Infrastructure\Task\TaskRepository;
+use App\Segment\Domain\Segment;
+use App\Segment\Domain\Segments;
+use App\Segment\Http\Request\CreateSegmentRequest;
+use App\Segment\Http\Request\PointPositionRequest;
+use App\Segment\Task\Task;
+use App\Segment\Task\TaskRepository;
 use Doctrine\ORM\ORMException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -66,7 +65,7 @@ final class SegmentController
     }
 
     /**
-     * @param Request $request
+     * @param CreateSegmentRequest $request
      * @param Segments $segmentRepository
      * @param UidGenerator $generator
      * @param MessageBusInterface $messageBus

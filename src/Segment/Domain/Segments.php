@@ -1,10 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Segment\Contract;
+namespace App\Segment\Domain;
 
-
-use App\Domain\Segment\Segment;
 
 interface Segments
 {

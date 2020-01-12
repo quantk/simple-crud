@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Hook;
+namespace App\Infrastructure\Http\Hook;
 
 
-use App\Infrastructure\Http\Controller\Resolver\ResolverError;
+use App\Infrastructure\Http\Resolver\ResolverError;
 use App\Infrastructure\Http\Response\Responder;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 

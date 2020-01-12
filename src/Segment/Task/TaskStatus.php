@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Task;
+namespace App\Segment\Task;
 
 /**
  * Class TaskStatus

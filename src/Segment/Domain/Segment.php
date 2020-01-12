@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace App\Domain\Segment;
+namespace App\Segment\Domain;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Segment
  * @package App\Domain\Segment
- * @ORM\Entity(repositoryClass="App\Domain\Segment\SegmentRepository")
+ * @ORM\Entity(repositoryClass="App\Segment\Domain\SegmentRepository")
  */
 class Segment
 {

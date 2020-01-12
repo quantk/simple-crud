@@ -20,17 +20,16 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Infrastructure\Http\Controller\:
-        resource: '../src/Infrastructure/Http/Controller'
-        exclude: '../src/Infrastructure/Http/Controller/Resolver/ResolverError.php'
+    App\Segment\Http\Controller\:
+        resource: '../src/Segment/Http/Controller'
         tags: ['controller.service_arguments']
 
-    App\Infrastructure\Hook\ResolverExceptionHook:
+    App\Infrastructure\Http\Hook\ResolverExceptionHook:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
-    App\Infrastructure\Http\Controller\Resolver\CreateSegmentRequestResolver: ~
-    App\Infrastructure\Http\Controller\Resolver\PointPositionRequestResolver: ~
+    App\Segment\Http\Controller\Resolver\CreateSegmentRequestResolver: ~
+    App\Segment\Http\Controller\Resolver\PointPositionRequestResolver: ~
 
     App\Infrastructure\Database\UuidGenerator: ~
     App\Infrastructure\Database\Contract\UidGenerator: '@App\Infrastructure\Database\UuidGenerator'
@@ -40,10 +39,10 @@ services:
 
     App\Infrastructure\Database\Flusher: ~
 
-    App\Domain\Segment\SegmentRepository: ~
-    App\Domain\Segment\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
+    App\Segment\Domain\SegmentRepository: ~
+    #    App\Segment\Domain\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
 
 
 
     # add more service definitions when explicit configuration is needed
-  # please note that last definitions always *replace* previous ones
+    # please note that last definitions always *replace* previous ones

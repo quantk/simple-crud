@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Database\DBAL;
 
 
-use App\Domain\Segment\Point;
+use App\Segment\Domain\Point;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 

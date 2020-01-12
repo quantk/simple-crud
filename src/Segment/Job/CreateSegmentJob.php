@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Job;
+namespace App\Segment\Job;
 
 
-use App\Domain\Segment\Contract\Segments;
-use App\Domain\Segment\Segment;
 use App\Infrastructure\Database\Flusher;
-use App\Infrastructure\Task\TaskRepository;
-use Doctrine\DBAL\DBALException;
+use App\Segment\Domain\Segment;
+use App\Segment\Domain\Segments;
+use App\Segment\Task\TaskRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -43,7 +42,6 @@ final class CreateSegmentJob implements MessageHandlerInterface
 
     /**
      * @param Segment $segment
-     * @throws DBALException
      * @throws \Throwable
      */
     public function __invoke(Segment $segment)

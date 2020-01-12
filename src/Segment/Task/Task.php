@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Task;
+namespace App\Segment\Task;
 
 
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @property-read TaskStatus $status
  * @property-read ?string $message
  * @property-read \DateTimeImmutable $createdAt
- * @ORM\Entity(repositoryClass="App\Infrastructure\Task\TaskRepository")
+ * @ORM\Entity(repositoryClass="App\Segment\Task\TaskRepository")
  */
 class Task
 {

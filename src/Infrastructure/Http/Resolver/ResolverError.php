@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Http\Controller\Resolver;
+namespace App\Infrastructure\Http\Resolver;
 
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;

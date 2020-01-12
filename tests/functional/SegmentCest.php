@@ -1,5 +1,6 @@
 <?php namespace App\Tests;
-use App\Domain\Segment\Point;
+
+use App\Segment\Domain\Point;
 
 class SegmentCest
 {

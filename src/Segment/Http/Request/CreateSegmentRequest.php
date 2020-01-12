@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Http\Request;
+namespace App\Segment\Http\Request;
 
-
-use App\Domain\Segment\Point;
-
+use App\Segment\Domain\Point;
 
 final class CreateSegmentRequest
 {

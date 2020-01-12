@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Segment;
 
-namespace App\Domain\Segment;
-
-use App\Domain\Segment\Contract\Segments;
+use App\Segment\Domain\Segment;
+use App\Segment\Domain\Segments;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;

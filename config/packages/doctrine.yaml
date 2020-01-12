@@ -13,13 +13,13 @@ doctrine:
         proxy_dir: '%kernel.cache_dir%/doctrine/orm/Proxies'
         default_entity_manager: default
         mappings:
-            AppDomainSegment:
+            AppSegmentDomain:
                 type: annotation
-                dir: '%kernel.project_dir%/src/Domain/Segment'
+                dir: '%kernel.project_dir%/src/Segment/Domain'
                 is_bundle: false
-                prefix: App\Domain\Segment
-            AppInfrastructureTask:
+                prefix: App\Segment\Domain\Segment
+            AppSegmentTask:
                 type: annotation
-                dir: '%kernel.project_dir%/src/Infrastructure/Task'
+                dir: '%kernel.project_dir%/src/Segment/Task'
                 is_bundle: false
-                prefix: App\Infrastructure\Task
+                prefix: App\Segment\Task\Task
