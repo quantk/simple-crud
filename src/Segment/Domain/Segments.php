@@ -1,10 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Domain\Segment\Contract;
+namespace App\Segment\Domain;
 
-
-use App\Domain\Segment\Segment;
 
 interface Segments
 {
@@ -17,7 +15,7 @@ interface Segments
      * @param string $uid
      * @return Segment|null
      */
-    public function find(string $uid): ?Segment;
+    public function findSegment(string $uid): ?Segment;
 
     /**
      * @param string $uid

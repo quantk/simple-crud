@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Job;
+namespace App\Segment\Job;
 
 
-use App\Domain\Segment\Contract\Segments;
-use App\Domain\Segment\Segment;
+use App\Infrastructure\Database\Flusher;
 use App\Infrastructure\Task\TaskRepository;
-use Doctrine\DBAL\DBALException;
+use App\Segment\Domain\Segments;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -22,44 +21,49 @@ final class CreateSegmentJob implements MessageHandlerInterface
      * @var LoggerInterface
      */
     private LoggerInterface $logger;
+    /**
+     * @var Flusher
+     */
+    private Flusher $flusher;
 
     public function __construct(
         Segments $segmentRepository,
         TaskRepository $taskRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Flusher $flusher
     )
     {
         $this->segmentRepository = $segmentRepository;
         $this->taskRepository = $taskRepository;
         $this->logger = $logger;
+        $this->flusher = $flusher;
     }
 
     /**
-     * @param Segment $segment
-     * @throws DBALException
+     * @param NewSegment $newSegment
      * @throws \Throwable
      */
-    public function __invoke(Segment $segment)
+    public function __invoke(NewSegment $newSegment)
     {
         $this->logger->debug('Executing CreateSegmentJob');
-        $task = $this->taskRepository->findByToken($segment->uid);
+        $task = $this->taskRepository->findByToken($newSegment->taskToken);
 
         if ($task === null) {
-            throw new \RuntimeException("Task not found for segment[{$segment->uid}]");
+            throw new \RuntimeException("Task not found for segment[{$newSegment->taskToken}]");
         }
 
         try {
-            $task = $task->execute();
-            $this->taskRepository->save($task);
+            $task->execute();
+            $this->flusher->flush();
 
+            $segment = $newSegment->assemble();
             $this->segmentRepository->add($segment);
-
-            $task = $task->done();
-            $this->taskRepository->save($task);
+            $task->done();
+            $this->flusher->flush();
             $this->logger->debug('CreateSegmentJob done');
         } catch (\Throwable $e) {
-            $task = $task->error($e->getMessage());
-            $this->taskRepository->save($task);
+            $task->error($e->getMessage());
+            $this->flusher->flush();
             $this->logger->error("CreateSegmentJob error. Message: {$e->getMessage()}");
             throw $e;
         }

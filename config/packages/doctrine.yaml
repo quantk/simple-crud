@@ -1,9 +1,27 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        mapping_types:
+            point: point
         types:
             point:  App\Infrastructure\Database\DBAL\PointType
 
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '5.7'
+    orm:
+        auto_mapping: true
+        proxy_namespace: Proxies
+        proxy_dir: '%kernel.cache_dir%/doctrine/orm/Proxies'
+        default_entity_manager: default
+        mappings:
+            AppSegmentDomain:
+                type: annotation
+                dir: '%kernel.project_dir%/src/Segment/Domain'
+                is_bundle: false
+                prefix: App\Segment\Domain\Segment
+            AppSegmentTask:
+                type: annotation
+                dir: '%kernel.project_dir%/src/Infrastructure/Task'
+                is_bundle: false
+                prefix: App\Infrastructure\Task\Task

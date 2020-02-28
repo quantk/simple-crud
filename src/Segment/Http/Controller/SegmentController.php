@@ -1,22 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\Http\Controller;
+namespace App\Segment\Http\Controller;
 
 
-use App\Domain\Segment\Contract\Segments;
-use App\Domain\Segment\Point;
-use App\Domain\Segment\Segment;
 use App\Infrastructure\Database\Contract\UidGenerator;
+use App\Infrastructure\Database\Flusher;
 use App\Infrastructure\Http\Response\Responder;
 use App\Infrastructure\Task\Task;
 use App\Infrastructure\Task\TaskRepository;
-use App\Infrastructure\Task\TaskStatus;
-use Doctrine\DBAL\DBALException;
-use Symfony\Component\HttpFoundation\Request;
+use App\Segment\Domain\Segment;
+use App\Segment\Domain\SegmentCreator;
+use App\Segment\Domain\Segments;
+use App\Segment\Http\Request\CreateSegmentRequest;
+use App\Segment\Http\Request\PointPositionRequest;
+use App\Segment\Job\NewSegment;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -30,14 +31,23 @@ final class SegmentController
      * @var Responder
      */
     private Responder $responder;
+    /**
+     * @var Flusher
+     */
+    private Flusher $flusher;
 
     /**
      * SegmentController constructor.
      * @param Responder $responder
+     * @param Flusher $flusher
      */
-    public function __construct(Responder $responder)
+    public function __construct(
+        Responder $responder,
+        Flusher $flusher
+    )
     {
         $this->responder = $responder;
+        $this->flusher = $flusher;
     }
 
     /**
@@ -49,58 +59,42 @@ final class SegmentController
         Segments $segmentRepository
     )
     {
-        $segments = $segmentRepository->all();
+        $segments = array_map(function (Segment $segment) {
+            return $segment->toArray();
+        }, $segmentRepository->all());
         return $this->responder->collection($segments);
     }
 
     /**
-     * @param Request $request
-     * @param Segments $segmentRepository
+     * @param CreateSegmentRequest $request
      * @param UidGenerator $generator
-     * @param MessageBusInterface $messageBus
      * @param TaskRepository $taskRepository
+     * @param SegmentCreator $creator
      * @return Response
+     * @throws ORMException
      * @Route("/create", name="segment_create", methods={"POST"})
-     * @throws DBALException
      */
     public function create(
-        Request $request,
-        Segments $segmentRepository,
+        CreateSegmentRequest $request,
         UidGenerator $generator,
-        MessageBusInterface $messageBus,
-        TaskRepository $taskRepository
+        TaskRepository $taskRepository,
+        SegmentCreator $creator
     )
     {
-        $x1 = $request->get('x1');
-        $y1 = $request->get('y1');
-        $x2 = $request->get('x2');
-        $y2 = $request->get('y2');
+        $newSegmentId = $generator->generate();
 
-        $needToRunAsync = $request->request->getBoolean('run_async', false);
+        $newSegment = new NewSegment($newSegmentId, $request->leftSide, $request->rightSide, $request->runAsync);
 
-        $uid = $generator->generate();
-        $leftSide = Point::create((float)$x1, (float)$y1);
-        $rightSide = Point::create((float)$x2, (float)$y2);
+        $task = Task::createIdle($generator->generate(), $newSegmentId);
+        $taskRepository->add($task);
 
-        $segment = Segment::create(
-            $uid,
-            $leftSide,
-            $rightSide
-        );
+        $creator->create($newSegment);
 
-        $task = null;
-
-        if ($needToRunAsync === true) {
-            $task = Task::create($generator->generate(), $segment->uid, TaskStatus::idle());
-            $taskRepository->save($task);
-            $messageBus->dispatch($segment);
-        } else {
-            $segmentRepository->add($segment);
-        }
+        $this->flusher->flush();
 
         return $this->responder->item([
-            'segment' => $segment,
-            'task' => $task
+            'segment_id' => $newSegmentId,
+            'task' => $task ? $task->toArray() : null
         ]);
     }
 
@@ -117,6 +111,7 @@ final class SegmentController
     {
         $segmentRepository->remove($uid);
 
+        $this->flusher->flush();
         return $this->responder->emptyResponse(201);
     }
 
@@ -131,42 +126,33 @@ final class SegmentController
         Segments $segmentRepository
     )
     {
-        $segment = $segmentRepository->find($uid);
+        $segment = $segmentRepository->findSegment($uid);
         if ($segment === null) {
             throw new NotFoundHttpException();
         }
 
-        return $this->responder->item($segment);
+        return $this->responder->item($segment->toArray());
     }
 
     /**
      * @param string $uid
      * @param Segments $segmentRepository
-     * @param Request $request
-     * @Route("/{uid}/point_position", name="segments_point_position", methods={"GET"})
+     * @param PointPositionRequest $request
      * @return Response
+     * @Route("/{uid}/point_position", name="segments_point_position", methods={"GET"})
      */
     public function pointPosition(
         string $uid,
         Segments $segmentRepository,
-        Request $request
+        PointPositionRequest $request
     )
     {
-        $segment = $segmentRepository->find($uid);
+        $segment = $segmentRepository->findSegment($uid);
         if ($segment === null) {
             throw new NotFoundHttpException();
         }
 
-        $x1 = $request->get('x1');
-        $y1 = $request->get('y1');
-
-        if ($x1 === null || $y1 === null) {
-            return $this->responder->error(['Point is required'], 400);
-        }
-
-        $point = Point::create((float)$x1, (float)$y1);
-
-        $position = $segment->calculatePointPositionByVertical($point);
+        $position = $segment->calculatePointPositionByVertical($request->point);
 
         return $this->responder->item([
             'position' => $position

@@ -2,8 +2,9 @@
 
 namespace App\Tests;
 
-use App\Domain\Segment\Point;
-use App\Domain\Segment\Segment;
+
+use App\Segment\Domain\Point;
+use App\Segment\Domain\Segment;
 
 /**
  * Inherited Methods
@@ -28,7 +29,6 @@ class FunctionalTester extends \Codeception\Actor
      * Define custom actions here
      */
 
-
     /**
      * @return array
      */
@@ -40,19 +40,17 @@ class FunctionalTester extends \Codeception\Actor
     public function haveSegment(Point $leftSide, Point $rightSide): Segment
     {
         $this->sendPOST('/segments/create', [
-            'x1' => $leftSide->x,
-            'y1' => $leftSide->y,
-            'x2' => $rightSide->x,
-            'y2' => $rightSide->y
+            'left_side' => $leftSide->toArray(),
+            'right_side' => $rightSide->toArray()
         ]);
 
         $this->seeResponseCodeIsSuccessful();
         $response = $this->grabDecodedResponse();
 
         return Segment::create(
-            $response['data']['segment']['uid'],
-            Point::create((float)$response['data']['segment']['leftSide']['x'], (float)$response['data']['segment']['leftSide']['y']),
-            Point::create((float)$response['data']['segment']['rightSide']['x'], (float)$response['data']['segment']['rightSide']['y']),
+            $response['data']['segment_id'],
+            $leftSide,
+            $rightSide,
             );
     }
 }

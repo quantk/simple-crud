@@ -15,13 +15,21 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude:
+            - '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Infrastructure\Http\Controller\:
-        resource: '../src/Infrastructure/Http/Controller'
+    App\Segment\Http\Controller\:
+        resource: '../src/Segment/Http/Controller'
         tags: ['controller.service_arguments']
+
+    App\Infrastructure\Http\Hook\ResolverExceptionHook:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    App\Segment\Http\Controller\Resolver\CreateSegmentRequestResolver: ~
+    App\Segment\Http\Controller\Resolver\PointPositionRequestResolver: ~
 
     App\Infrastructure\Database\UuidGenerator: ~
     App\Infrastructure\Database\Contract\UidGenerator: '@App\Infrastructure\Database\UuidGenerator'
@@ -29,10 +37,12 @@ services:
     App\Infrastructure\Http\Response\JsonResponder: ~
     App\Infrastructure\Http\Response\Responder: '@App\Infrastructure\Http\Response\JsonResponder'
 
-    App\Domain\Segment\SegmentRepository: ~
-    App\Domain\Segment\Contract\Segments: '@App\Domain\Segment\SegmentRepository'
+    App\Infrastructure\Database\Flusher: ~
 
-    App\Domain\Segment\SegmentService: ~
+    App\Segment\SegmentRepository: ~
+    App\Segment\Domain\Segments: '@App\Segment\SegmentRepository'
+
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
